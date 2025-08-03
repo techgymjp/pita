@@ -75,27 +75,6 @@
             border-radius: 50% 50% 0 0;
         }
 
-        .sake-stream {
-            position: absolute;
-            left: 155px;
-            bottom: 90px;
-            width: 3px;
-            height: 0;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(230, 230, 250, 0.8));
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            border-radius: 2px;
-            transform: rotate(25deg);
-            transform-origin: top center;
-            display: none;
-        }
-
-        .sake-stream.active {
-            opacity: 1;
-            height: 80px;
-            display: block;
-        }
-
         .ochoko {
             position: absolute;
             left: 170px;
@@ -257,7 +236,6 @@
         
         <div class="game-area">
             <div class="tokkuri" id="tokkuri"></div>
-            <div class="sake-stream" id="sakeStream"></div>
             <div class="ochoko">
                 <div class="sake-level" id="sakeLevel"></div>
                 <div class="target-line"></div>
@@ -356,7 +334,6 @@
             
             // 徳利を直立に戻す
             document.getElementById('tokkuri').classList.remove('pouring');
-            document.getElementById('sakeStream').classList.remove('active');
         }
 
         function startPouring() {
@@ -364,7 +341,6 @@
             
             gameState.isPouring = true;
             document.getElementById('tokkuri').classList.add('pouring');
-            document.getElementById('sakeStream').classList.add('active');
             
             gameState.pourInterval = setInterval(() => {
                 if (gameState.sakeLevel < 100) {
@@ -391,7 +367,6 @@
             
             gameState.isPouring = false;
             document.getElementById('tokkuri').classList.remove('pouring');
-            document.getElementById('sakeStream').classList.remove('active');
             
             if (gameState.pourInterval) {
                 clearInterval(gameState.pourInterval);
