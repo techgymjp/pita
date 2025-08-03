@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             background: linear-gradient(135deg, #2c1810, #4a2c1a);
             font-family: 'Arial', sans-serif;
             color: #fff;
@@ -15,29 +15,32 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            box-sizing: border-box;
         }
 
         .game-container {
             text-align: center;
             background: rgba(0, 0, 0, 0.3);
-            padding: 30px;
+            padding: 15px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            margin: 10px 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             color: #f4e4bc;
         }
 
         .game-area {
             position: relative;
-            width: 400px;
-            height: 500px;
-            margin: 20px auto;
+            width: 350px;
+            height: 180px;
+            margin: 10px auto;
             background: linear-gradient(to bottom, #1a1a2e, #16213e);
             border-radius: 15px;
             overflow: hidden;
@@ -45,54 +48,58 @@
 
         .tokkuri {
             position: absolute;
-            left: 50px;
-            top: 50px;
-            width: 80px;
-            height: 120px;
+            left: 80px;
+            bottom: 40px;
+            width: 60px;
+            height: 90px;
             background: linear-gradient(to bottom, #8b7355, #6b5b47);
-            border-radius: 10px 10px 5px 5px;
+            border-radius: 8px 8px 4px 4px;
             transform-origin: bottom center;
             transition: transform 0.2s ease;
             box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .tokkuri.pouring {
-            transform: rotate(45deg);
+            transform: rotate(25deg);
         }
 
         .tokkuri::before {
             content: '';
             position: absolute;
-            top: -10px;
+            top: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 20px;
-            height: 15px;
+            width: 15px;
+            height: 12px;
             background: linear-gradient(to bottom, #8b7355, #6b5b47);
             border-radius: 50% 50% 0 0;
         }
 
         .sake-stream {
             position: absolute;
-            left: 120px;
-            top: 120px;
-            width: 4px;
+            left: 155px;
+            bottom: 90px;
+            width: 3px;
             height: 0;
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(230, 230, 250, 0.8));
             opacity: 0;
             transition: opacity 0.2s ease;
             border-radius: 2px;
+            transform: rotate(25deg);
+            transform-origin: top center;
+            display: none;
         }
 
         .sake-stream.active {
             opacity: 1;
-            height: 150px;
+            height: 80px;
+            display: block;
         }
 
         .ochoko {
             position: absolute;
-            left: 150px;
-            bottom: 80px;
+            left: 170px;
+            bottom: 40px;
             width: 100px;
             height: 60px;
             background: rgba(255, 255, 255, 0.1);
@@ -123,12 +130,12 @@
         }
 
         .controls {
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         .pour-button {
-            padding: 15px 30px;
-            font-size: 1.2em;
+            padding: 12px 25px;
+            font-size: 1.1em;
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
             border: none;
@@ -137,6 +144,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
             user-select: none;
+            touch-action: manipulation;
         }
 
         .pour-button:hover {
@@ -150,15 +158,15 @@
         }
 
         .score {
-            font-size: 1.5em;
-            margin: 15px 0;
+            font-size: 1.3em;
+            margin: 10px 0;
             color: #f4e4bc;
         }
 
         .result {
-            font-size: 1.3em;
-            margin: 15px 0;
-            height: 30px;
+            font-size: 1.2em;
+            margin: 10px 0;
+            height: 25px;
             font-weight: bold;
         }
 
@@ -173,17 +181,17 @@
         }
 
         .start-screen, .game-over-screen {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 15px;
+            z-index: 1000;
         }
 
         .start-button, .restart-button {
@@ -197,6 +205,7 @@
             margin-top: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .start-button:hover, .restart-button:hover {
@@ -205,12 +214,40 @@
         }
 
         .instructions {
-            font-size: 1.1em;
-            line-height: 1.6;
-            max-width: 300px;
+            font-size: 1em;
+            line-height: 1.5;
+            max-width: 280px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #f4e4bc;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 10px;
+                margin: 0 5px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin: 5px 0;
+            }
+            
+            .game-area {
+                width: 320px;
+                height: 160px;
+            }
+            
+            .pour-button {
+                padding: 15px 20px;
+                font-size: 1em;
+            }
+            
+            .instructions {
+                font-size: 0.9em;
+                max-width: 250px;
+            }
         }
     </style>
 </head>
@@ -234,18 +271,18 @@
                     少なすぎても、こぼれてもNG！<br>
                     タイミングが勝負です！
                 </div>
-                <button class="start-button" onclick="startGame()">ゲーム開始</button>
+                <button class="start-button" id="startButton">ゲーム開始</button>
             </div>
             
             <div class="game-over-screen" id="gameOverScreen" style="display: none;">
                 <h2>ゲーム終了</h2>
                 <div id="finalScore"></div>
-                <button class="restart-button" onclick="restartGame()">もう一度</button>
+                <button class="restart-button" id="restartButton">もう一度</button>
             </div>
         </div>
 
         <div class="controls">
-            <button class="pour-button" id="pourButton" onmousedown="startPouring()" onmouseup="stopPouring()" onmouseleave="stopPouring()" ontouchstart="startPouring()" ontouchend="stopPouring()">
+            <button class="pour-button" id="pourButton">
                 日本酒を注ぐ
             </button>
         </div>
@@ -406,9 +443,55 @@
             playSound('over');
         }
 
-        // タッチデバイス対応
+        // イベントリスナーの設定
+        function setupEventListeners() {
+            const pourButton = document.getElementById('pourButton');
+            const startButton = document.getElementById('startButton');
+            const restartButton = document.getElementById('restartButton');
+
+            // スタートボタン
+            startButton.addEventListener('click', startGame);
+            startButton.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startGame();
+            });
+
+            // リスタートボタン
+            restartButton.addEventListener('click', restartGame);
+            restartButton.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                restartGame();
+            });
+
+            // 注ぐボタン - マウス操作
+            pourButton.addEventListener('mousedown', startPouring);
+            pourButton.addEventListener('mouseup', stopPouring);
+            pourButton.addEventListener('mouseleave', stopPouring);
+
+            // 注ぐボタン - タッチ操作
+            pourButton.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startPouring();
+            });
+            pourButton.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                stopPouring();
+            });
+            pourButton.addEventListener('touchcancel', function(e) {
+                e.preventDefault();
+                stopPouring();
+            });
+        }
+
+        // ページ読み込み時にイベントリスナーを設定
+        document.addEventListener('DOMContentLoaded', setupEventListeners);
+
+        // タッチデバイス対応の改善
         document.addEventListener('touchstart', function(e) {
-            e.preventDefault();
+            // ボタン以外のタッチは無効化しない
+            if (!e.target.matches('button')) {
+                e.preventDefault();
+            }
         }, { passive: false });
 
         // キーボード操作対応
